@@ -121,8 +121,26 @@ namespace AssessmentTest
             IElementsProvider<string> provider = new StringProvider();
             IPagination<string> pagination = new PaginationString(COMMA_NUMBER_SAMPLE, 5, provider);
             pagination.GoToPage(3);
-            pagination.PrevPage();
-            string [] expectedElements = {"f", "g", "h", "i", "j"};
+            string [] expectedElements = {"11", "12", "13", "14", "15"};
+            CollectionAssert.AreEqual(expectedElements, pagination.GetVisibleItems().ToList());
+        }
+
+        [TestMethod]
+        public void NextPage()
+        {
+            IElementsProvider<string> provider = new StringProvider();
+            IPagination<string> pagination = new PaginationString(COMMA_NUMBER_SAMPLE, 5, provider);
+            pagination.NextPage();
+            string [] expectedElements = {"6", "7", "8", "9", "10"};
+            CollectionAssert.AreEqual(expectedElements, pagination.GetVisibleItems().ToList());
+        }
+
+        [TestMethod]
+        public void GetVisibleItems()
+        {
+            IElementsProvider<string> provider = new StringProvider();
+            IPagination<string> pagination = new PaginationString(COMMA_NUMBER_SAMPLE, 5, provider);
+            string [] expectedElements = {"1", "2", "3", "4", "5"};
             CollectionAssert.AreEqual(expectedElements, pagination.GetVisibleItems().ToList());
         }
     }
