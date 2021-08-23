@@ -10,6 +10,7 @@ namespace AssessmentTest
     {
         private const string COMMA_SAMPLE = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z";
         private const string PIPE_SAMPLE = "a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z";
+        private const string COMMA_NUMBER_SAMPLE = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26";
         
         [TestMethod]
         public void TestFirstPage()
@@ -34,7 +35,12 @@ namespace AssessmentTest
         [TestMethod]
         public void TestPreviousPage()
         {
-            
+            IElementsProvider<string> provider = new StringProvider();
+            IPagination<string> pagination = new PaginationString(COMMA_SAMPLE, 5, provider);
+            pagination.GoToPage(3);
+            pagination.PrevPage();
+            string [] expectedElements = {"f", "g", "h", "i", "j"};
+            CollectionAssert.AreEqual(expectedElements, pagination.GetVisibleItems().ToList());
         }
 
         [TestMethod]
@@ -43,7 +49,11 @@ namespace AssessmentTest
             IElementsProvider<string> provider = new StringProvider();
             IPagination<string> pagination = new PaginationString(COMMA_SAMPLE, 5, provider);
             pagination.LastPage();
-            string [] expectedElements = {"v", "w", "x", "y", "z"};
+            // string [] expectedElements = {"v", "w", "x", "y", "z"};
+
+            // The last page only contain one element, the alphabet has 26 elements not 25, if not I misunderstand the question sorry
+            string [] expectedElements = {"z"};
+            
             CollectionAssert.AreEqual(expectedElements, pagination.GetVisibleItems().ToList());
         }
 
@@ -60,11 +70,21 @@ namespace AssessmentTest
         [TestMethod]
         public void TestLastPageWith10PageSize()
         {
+            IElementsProvider<string> provider = new StringProvider();
+            IPagination<string> pagination = new PaginationString(COMMA_SAMPLE, 10, provider);
+            pagination.LastPage();
+            string [] expectedElements = {"u", "v", "w", "x", "y", "z"};
+            CollectionAssert.AreEqual(expectedElements, pagination.GetVisibleItems().ToList());
         }
 
         [TestMethod]
         public void TestGoToPageWith10PageSize()
         {
+            IElementsProvider<string> provider = new StringProvider();
+            IPagination<string> pagination = new PaginationString(COMMA_SAMPLE, 10, provider);
+            pagination.GoToPage(2);
+            string [] expectedElements = {"k", "l", "m", "n", "o", "p", "q", "r", "s", "t"};
+            CollectionAssert.AreEqual(expectedElements, pagination.GetVisibleItems().ToList());
         }
 
          [TestMethod]
@@ -78,10 +98,14 @@ namespace AssessmentTest
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException), "Invalid page number.")]
         public void TestPreviousPageException()
         {
-
+            IElementsProvider<string> provider = new StringProvider();
+            IPagination<string> pagination = new PaginationString(COMMA_SAMPLE, 5, provider);
+            pagination.PrevPage();
         }
+
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException), "Invalid page number.")]
         public void TestGoToPageException()
@@ -89,6 +113,17 @@ namespace AssessmentTest
             IElementsProvider<string> provider = new StringProvider();
             IPagination<string> pagination = new PaginationString(COMMA_SAMPLE, 5, provider);
             pagination.GoToPage(1000000);
+        }
+
+        [TestMethod]
+        public void GoToPage()
+        {
+            IElementsProvider<string> provider = new StringProvider();
+            IPagination<string> pagination = new PaginationString(COMMA_NUMBER_SAMPLE, 5, provider);
+            pagination.GoToPage(3);
+            pagination.PrevPage();
+            string [] expectedElements = {"f", "g", "h", "i", "j"};
+            CollectionAssert.AreEqual(expectedElements, pagination.GetVisibleItems().ToList());
         }
     }
 }

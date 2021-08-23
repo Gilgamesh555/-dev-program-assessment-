@@ -23,7 +23,7 @@ namespace AssessmentConsole
                 1. Source data
                 0. Back
                 ");
-             if (option == "1")
+            if (option == "1")
             {
                 ProcessPagination();
             }
@@ -38,9 +38,20 @@ namespace AssessmentConsole
                 3. Space separated data( )
                 0. Go Back
                 ");
+            string data = GetOption("Source data");
+            // switch (option)
+            // {
+            //     case "2":
+            //     data = data.Replace("|" , ",");
+            //     break;
+            //     case "3":
+            //     data = data.Replace(" ", ",");
+            //     break;
+            //     default:
+            //     break;
+            // }
             if (option == "1" || option == "2" || option == "3") 
             {
-                string data = GetOption("Source data");
                 NavigateData(data, option);
             } 
         }
@@ -58,8 +69,8 @@ namespace AssessmentConsole
             bool exit = false;
             while(!exit)
             {
-                Console.WriteLine("Current Page:" + pagination);
-                 string option = GetOption(
+                Console.WriteLine("Current Page:" + pagination.CurrentPage());
+                string option = GetOption(
                 @"Type: \n
                 1. First page
                 2. Next page
@@ -68,12 +79,27 @@ namespace AssessmentConsole
                 5. Go to page
                 0. Go Back
                 ");
-                if (option == "4") 
+                switch (option)
                 {
-                    pagination.LastPage();
-                } else if (option == "0")
-                {
-                    exit = true;
+                    case "1":
+                        // pagination.GetVisibleItems();
+                        pagination.FirstPage();
+                    break;
+                    case "2":
+                        pagination.NextPage();
+                    break;
+                    case "3":
+                        pagination.PrevPage();
+                    break;
+                    case "4":
+                        pagination.LastPage();
+                    break;
+                    case "5":
+                        pagination.GoToPage(int.Parse(Console.ReadLine()));
+                    break;
+                    default:
+                        exit = true;
+                    break;
                 }
             }
     
